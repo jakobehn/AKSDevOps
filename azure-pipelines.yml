@@ -18,8 +18,8 @@ steps:
     resourceGroupName: 'techdays-eu'
     location: 'West Europe'
     templateLocation: 'Linked artifact'
-    csmFile: '$(System.DefaultWorkingDirectory)/k8scluster/cluster.json'
-    csmParametersFile: '$(System.DefaultWorkingDirectory)/k8scluster/cluster-eu.parameters.json'
+    csmFile: '$(System.DefaultWorkingDirectory)/AKS/cluster.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/AKS/cluster-eu.parameters.json'
     deploymentMode: 'Incremental'
 
 - task: AzureResourceGroupDeployment@2
@@ -29,6 +29,6 @@ steps:
     resourceGroupName: 'techdays-us'
     location: 'EastUS2'
     templateLocation: 'Linked artifact'
-    csmFile: '$(System.DefaultWorkingDirectory)/k8scluster/cluster.json'
-    csmParametersFile: '$(System.DefaultWorkingDirectory)/k8scluster/cluster-us.parameters.json'
+    csmFile: '$(System.DefaultWorkingDirectory)/AKS/cluster.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/AKS/cluster-us.parameters.json'
     deploymentMode: 'Incremental'
