@@ -1,34 +1,52 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 name: 1.0$(rev:.r)
 
 trigger: none
 
-pool:
-  name: Local
+stages:
+- stage: Test
+  jobs:
+  - job: Test
+    pool:
+      name: Local  
+    steps:
+    - task: AzureResourceGroupDeployment@2
+      displayName: Deploy Test
+      inputs:
+        azureSubscription: 'Microsoft Azure Sponsorship(b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5)'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'techdays-test'
+        location: 'West Europe'
+        templateLocation: 'Linked artifact'
+        csmFile: '$(System.DefaultWorkingDirectory)/AKS/cluster.json'
+        csmParametersFile: '$(System.DefaultWorkingDirectory)/AKS/cluster-test.parameters.json'
+        deploymentMode: 'Incremental'
 
-steps:
-- task: AzureResourceGroupDeployment@2
-  inputs:
-    azureSubscription: 'Microsoft Azure Sponsorship(b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5)'
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: 'techdays-eu'
-    location: 'West Europe'
-    templateLocation: 'Linked artifact'
-    csmFile: '$(System.DefaultWorkingDirectory)/AKS/cluster.json'
-    csmParametersFile: '$(System.DefaultWorkingDirectory)/AKS/cluster-eu.parameters.json'
-    deploymentMode: 'Incremental'
+- stage: Prod
+  jobs:
+  - job: Prod
+    pool:
+      name: Local    
+    steps:
+    - task: AzureResourceGroupDeployment@2
+      displayName: Deploy Prod EU
+      inputs:
+        azureSubscription: 'Microsoft Azure Sponsorship(b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5)'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'techdays-eu'
+        location: 'West Europe'
+        templateLocation: 'Linked artifact'
+        csmFile: '$(System.DefaultWorkingDirectory)/AKS/cluster.json'
+        csmParametersFile: '$(System.DefaultWorkingDirectory)/AKS/cluster-eu.parameters.json'
+        deploymentMode: 'Incremental'
 
-- task: AzureResourceGroupDeployment@2
-  inputs:
-    azureSubscription: 'Microsoft Azure Sponsorship(b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5)'
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: 'techdays-us'
-    location: 'EastUS2'
-    templateLocation: 'Linked artifact'
-    csmFile: '$(System.DefaultWorkingDirectory)/AKS/cluster.json'
-    csmParametersFile: '$(System.DefaultWorkingDirectory)/AKS/cluster-us.parameters.json'
-    deploymentMode: 'Incremental'
+    - task: AzureResourceGroupDeployment@2
+      displayName: Deploy Prod US
+      inputs:
+        azureSubscription: 'Microsoft Azure Sponsorship(b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5)'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'techdays-us'
+        location: 'EastUS2'
+        templateLocation: 'Linked artifact'
+        csmFile: '$(System.DefaultWorkingDirectory)/AKS/cluster.json'
+        csmParametersFile: '$(System.DefaultWorkingDirectory)/AKS/cluster-us.parameters.json'
+        deploymentMode: 'Incremental'
