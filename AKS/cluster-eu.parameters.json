@@ -1,0 +1,72 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "clusterName": {
+            "value": "techdays-eu"
+        },
+        "dnsPrefix": {
+            "value": "techdays-eu"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "osDiskSizeGB": {
+            "value": 100
+        },
+        "agentCount": {
+            "value": 3
+        },
+        "agentMinCount": {
+            "value": 3
+        },
+        "agentMaxCount": {
+            "value": 5
+        },
+        "agentVMSize": {
+            "value": "Standard_DS2_v2"
+        },
+        "servicePrincipalClientId": {
+            "value": "add12d25-bf07-4ef0-9304-731d89cca3d9"
+        },
+        "clientAppId": {
+            "value": "ed880b5c-ed01-458a-8b74-7395545b6f8e"
+        },
+        "serverAppId": {
+            "value": "5a59366b-d227-4c38-a020-c66208eaea54"
+        },
+        "serverAppSecret": {
+            "value": "da77235e-09d1-4445-8937-6dbb04dd9610"
+        },
+        "tenantId": {
+            "value": "7910c4f6-7843-49ce-b9de-dc9d4379f950"
+        },
+        "networkPlugin": {
+            "value": "kubenet"
+        },
+        "maxPods": {
+            "value": 30
+        },
+        "serviceCidr": {
+            "value": "10.0.0.0/16"
+        },
+        "podCidr": {
+            "value": "10.244.0.0/16"
+        },
+        "dnsServiceIP": {
+            "value": "10.0.0.10"
+        },
+        "dockerBridgeCidr": {
+            "value": "172.17.0.1/16"
+        },
+        "osType": {
+            "value": "Linux"
+        },
+        "kubernetesVersion": {
+            "value": "1.13.10"
+        },
+        "logAnalyticsWorkspaceResourceId": {
+            "value": "/subscriptions/b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5/resourceGroups/defaultresourcegroup-weu/providers/microsoft.operationalinsights/workspaces/defaultworkspace-b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5-weu"
+        }
+    }
+}

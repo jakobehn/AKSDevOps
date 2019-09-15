@@ -1,0 +1,233 @@
+    {
+        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+        "contentVersion": "1.0.0.0",
+        "variables": {},
+        "parameters": {
+            "clusterName": {
+                "type": "string",
+                "metadata": {
+                    "description": "The name of the Managed Cluster resource."
+                }
+            },
+            "location": {
+                "type": "string",
+                "defaultValue": "[resourceGroup().location]",
+                "metadata": {
+                    "description": "The location of the Managed Cluster resource."
+                }
+            },
+            "dnsPrefix": {
+                "type": "string",
+                "metadata": {
+                    "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
+                }
+            },
+            "osDiskSizeGB": {
+                "type": "int",
+                "defaultValue": 0,
+                "metadata": {
+                    "description": "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 will apply the default disk size for that agentVMSize."
+                },
+                "minValue": 0,
+                "maxValue": 1023
+            },
+            "agentCount": {
+                "type": "int",
+                "defaultValue": 3,
+                "metadata": {
+                    "description": "The number of nodes for the cluster."
+                },
+                "minValue": 1,
+                "maxValue": 50
+            },
+            "agentMaxCount": {
+                "type": "int",
+                "defaultValue": 5,
+                "metadata": {
+                    "description": "The number of nodes for the cluster."
+                },
+                "minValue": 1,
+                "maxValue": 50
+            },        
+            "agentMinCount": {
+                "type": "int",
+                "defaultValue": 3,
+                "metadata": {
+                    "description": "The number of nodes for the cluster."
+                },
+                "minValue": 1,
+                "maxValue": 50
+            },        
+            "agentVMSize": {
+                "type": "string",
+                "defaultValue": "Standard_DS2_v2",
+                "metadata": {
+                    "description": "The size of the Virtual Machine."
+                }
+            },
+            "servicePrincipalClientId": {
+                "metadata": {
+                    "description": "Client ID (used by cloudprovider)"
+                },
+                "type": "string"
+            },
+            "clientAppId": {
+                "metadata": {
+                    "description": "The Service Principal Client Secret."
+                },
+                "type": "string"
+            },
+            "serverAppId": {
+                "metadata": {
+                    "description": "The Service Principal Client Secret."
+                },
+                "type": "string"
+            },
+            "serverAppSecret": {
+                "metadata": {
+                    "description": "The Service Principal Client Secret."
+                },
+                "type": "string"
+            },        
+            "tenantId": {
+                "metadata": {
+                    "description": "The Service Principal Client Secret."
+                },
+                "type": "string"
+            },
+            "networkPlugin": {
+                "allowedValues": [
+                    "azure",
+                    "kubenet"
+                ],
+                "defaultValue": "azure",
+                "type": "string",
+                "metadata": {
+                    "description": "Network plugin used for building Kubernetes network."
+                }
+            },
+            "maxPods": {
+                "defaultValue": 30,
+                "type": "int",
+                "metadata": {
+                    "description": "Maximum number of pods that can run on a node."
+                }
+            },
+            "serviceCidr": {
+                "type": "string",
+                "defaultValue": "10.0.0.0/16",
+                "metadata": {
+                    "description": "A CIDR notation IP range from which to assign service cluster IPs."
+                }
+            },
+            "podCidr": {
+                "type": "string",
+                "defaultValue": "10.244.0.0/16",
+                "metadata": {
+                    "description": "A CIDR notation IP range from which to assign pods."
+                }
+            },        
+            "dnsServiceIP": {
+                "type": "string",
+                "defaultValue": "10.0.0.10",
+                "metadata": {
+                    "description": "Containers DNS server IP address."
+                }
+            },
+            "dockerBridgeCidr": {
+                "type": "string",
+                "defaultValue": "172.17.0.1/16",
+                "metadata": {
+                    "description": "A CIDR notation IP for Docker bridge."
+                }
+            },        
+
+            "osType": {
+                "type": "string",
+                "defaultValue": "Linux",
+                "allowedValues": [
+                    "Linux"
+                ],
+                "metadata": {
+                    "description": "The type of operating system."
+                }
+            },
+            "kubernetesVersion": {
+                "type": "string",
+                "defaultValue": "1.13.10",
+                "allowedValues": [
+                    "1.10.13",
+                    "1.11.10",
+                    "1.12.8",
+                    "1.13.10",
+                    "1.14.6"
+                ],
+                "metadata": {
+                    "description": "The version of Kubernetes."
+                }
+            },
+            "logAnalyticsWorkspaceResourceId": {
+                "type": "string"  
+            }
+        },    
+        "resources": [
+            {
+                "type": "Microsoft.ContainerService/managedClusters",
+                "apiVersion": "2019-06-01",
+                "name": "[parameters('clusterName')]",
+                "location": "[parameters('location')]",
+                "properties": {
+                    "kubernetesVersion": "[parameters('kubernetesVersion')]",
+                    "dnsPrefix": "[parameters('dnsPrefix')]",
+                    "agentPoolProfiles": [
+                        {
+                            "name": "nodepool1",
+                            "count": "[parameters('agentCount')]",
+                            "vmSize": "[parameters('agentVmSize')]",
+                            "osDiskSizeGB": "[parameters('osDiskSizeGB')]",
+                            "maxPods": "[parameters('maxPods')]",
+                            "type": "VirtualMachineScaleSets",
+                            "availabilityZones": [
+                                "1",
+                                "2"
+                            ],
+                            "maxCount": "[parameters('agentMaxCount')]",
+                            "minCount": "[parameters('agentMinCount')]",
+                            "enableAutoScaling": true,
+                            "orchestratorVersion": "[parameters('kubernetesVersion')]",
+                            "osType": "[parameters('osType')]"
+                        }
+                    ],
+                    "servicePrincipalProfile": {
+                        "clientId": "[parameters('servicePrincipalClientId')]",
+                        "secret": "c7576c7c-5ba4-45cc-836c-4bb7844fb038"
+                    }, 
+                    "addonProfiles": {
+                        "omsagent": {
+                          "enabled": true,
+                          "config": {
+                            "logAnalyticsWorkspaceResourceID": "[parameters('logAnalyticsWorkspaceResourceId')]"
+                          }
+                        }
+                      },                    
+                    "nodeResourceGroup": "[concat('MC_', parameters('clusterName'), '_', parameters('clusterName'), parameters('location'))]",
+                    "enableRBAC": true,
+                    "enablePodSecurityPolicy": false,
+                    "networkProfile": {
+                        "networkPlugin": "[parameters('networkPlugin')]",
+                        "loadBalancerSku": "standard",
+                        "podCidr": "[parameters('podCidr')]",
+                        "serviceCidr": "[parameters('serviceCidr')]",
+                        "dnsServiceIP": "[parameters('dnsServiceIP')]",
+                        "dockerBridgeCidr": "[parameters('dockerBridgeCidr')]"
+                    },
+                    "aadProfile": {
+                        "clientAppID": "[parameters('clientAppId')]",
+                        "serverAppID": "[parameters('serverAppId')]",
+                        "tenantID": "[parameters('tenantId')]",
+                        "serverAppSecret": "[parameters('serverAppSecret')]"                    
+                    }
+                }
+            }
+        ]
+    }
