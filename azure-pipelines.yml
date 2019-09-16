@@ -1,6 +1,7 @@
 name: 1.0$(rev:.r)
 
-trigger: none
+trigger: 
+- master
 
 stages:
 - stage: Test
@@ -14,7 +15,7 @@ stages:
       inputs:
         azureSubscription: 'Microsoft Azure Sponsorship(b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5)'
         action: 'Create Or Update Resource Group'
-        resourceGroupName: 'techdays-test'
+        resourceGroupName: 'tdswe-test'
         location: 'West Europe'
         templateLocation: 'Linked artifact'
         csmFile: '$(System.DefaultWorkingDirectory)/AKS/cluster.json'
@@ -32,7 +33,7 @@ stages:
       inputs:
         azureSubscription: 'Microsoft Azure Sponsorship(b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5)'
         action: 'Create Or Update Resource Group'
-        resourceGroupName: 'techdays-eu'
+        resourceGroupName: 'tdswe-eu'
         location: 'West Europe'
         templateLocation: 'Linked artifact'
         csmFile: '$(System.DefaultWorkingDirectory)/AKS/cluster.json'
@@ -44,7 +45,7 @@ stages:
       inputs:
         azureSubscription: 'Microsoft Azure Sponsorship(b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5)'
         action: 'Create Or Update Resource Group'
-        resourceGroupName: 'techdays-us'
+        resourceGroupName: 'tdswe-us'
         location: 'EastUS2'
         templateLocation: 'Linked artifact'
         csmFile: '$(System.DefaultWorkingDirectory)/AKS/cluster.json'
