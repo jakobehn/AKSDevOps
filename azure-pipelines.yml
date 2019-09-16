@@ -24,7 +24,7 @@ stages:
 
 - stage: Prod
   jobs:
-  - job: Prod
+  - job: Europe
     pool:
       name: Local    
     steps:
@@ -39,6 +39,11 @@ stages:
         csmFile: '$(System.DefaultWorkingDirectory)/AKS/cluster.json'
         csmParametersFile: '$(System.DefaultWorkingDirectory)/AKS/cluster-eu.parameters.json'
         deploymentMode: 'Incremental'
+
+  - job: US
+    pool:
+      name: Local    
+    steps:
 
     - task: AzureResourceGroupDeployment@2
       displayName: Deploy Prod US

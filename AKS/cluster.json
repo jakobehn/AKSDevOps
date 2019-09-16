@@ -1,7 +1,6 @@
     {
         "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
         "contentVersion": "1.0.0.0",
-        "variables": {},
         "parameters": {
             "clusterName": {
                 "type": "string",
@@ -71,6 +70,12 @@
                 },
                 "type": "string"
             },
+            "servicePrincipalObjectId": {
+                "type": "securestring",
+                "metadata": {
+                    "description": "Oject ID against which the Network Contributor roles will be assigned on the subnet"
+                }
+            },            
             "clientAppId": {
                 "metadata": {
                     "description": "The Service Principal Client Secret."
@@ -168,8 +173,21 @@
             },
             "logAnalyticsWorkspaceResourceId": {
                 "type": "string"  
+            },
+            "existingVirtualNetworkResourceGroup": {
+                "type": "string"  
+            },
+            "existingVirtualNetworkName": {
+                "type": "string"  
+            },
+            "existingSubnetName": {
+                "type": "string"  
             }
+
         },    
+        "variables": {
+            "vnetSubnetId": "[resourceId(parameters('existingVirtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks/subnets', parameters('existingVirtualNetworkName'), parameters('existingSubnetName'))]"
+        },        
         "resources": [
             {
                 "type": "Microsoft.ContainerService/managedClusters",
@@ -196,6 +214,7 @@
                             "minCount": "[parameters('agentMinCount')]",
                             "enableAutoScaling": true,
                             "orchestratorVersion": "[parameters('kubernetesVersion')]",
+                            "vnetSubnetID": "[variables('vnetSubnetID')]",                            
                             "osType": "[parameters('osType')]"
                         }
                     ],
@@ -227,6 +246,34 @@
                         "serverAppID": "[parameters('serverAppId')]",
                         "tenantID": "[parameters('tenantId')]",
                         "serverAppSecret": "[parameters('serverAppSecret')]"                    
+                    }
+                }
+            },
+            {
+                "type": "Microsoft.Resources/deployments",
+                "name": "ClusterSubnetRoleAssignmentDeployment",
+                "apiVersion": "2017-05-10",
+                "subscriptionId": "[subscription().subscriptionId]",
+                "resourceGroup": "[parameters('existingVirtualNetworkResourceGroup')]",
+                "properties": {
+                    "mode": "Incremental",
+                    "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {},
+                        "variables": {},
+                        "resources": [
+                            {
+                                "type": "Microsoft.Network/virtualNetworks/subnets/providers/roleAssignments",
+                                "apiVersion": "2017-05-01",
+                                "name": "[concat(parameters('existingVirtualNetworkName'), '/', parameters('existingSubnetName'), '/Microsoft.Authorization/', guid(resourceGroup().id, deployment().name))]",
+                                "properties": {
+                                    "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
+                                    "principalId": "[parameters('servicePrincipalObjectId')]",
+                                    "scope": "[variables('vnetSubnetId')]"
+                                }
+                            }
+                        ]
                     }
                 }
             }
