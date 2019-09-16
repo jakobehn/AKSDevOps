@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "clusterName": {
-            "value": "techdays-eu"
+            "value": "tdswe-eu"
         },
         "dnsPrefix": {
-            "value": "techdays-eu"
+            "value": "tdswe-eu"
         },
         "location": {
             "value": "westeurope"
@@ -15,13 +15,13 @@
             "value": 100
         },
         "agentCount": {
-            "value": 3
+            "value": 1
         },
         "agentMinCount": {
-            "value": 3
+            "value": 1
         },
         "agentMaxCount": {
-            "value": 5
+            "value": 3
         },
         "agentVMSize": {
             "value": "Standard_DS2_v2"

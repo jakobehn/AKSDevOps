@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "clusterName": {
-            "value": "techdays-test"
+            "value": "tdswe-test"
         },
         "dnsPrefix": {
-            "value": "techdays-test"
+            "value": "tdswe-test"
         },
         "location": {
             "value": "westeurope"
