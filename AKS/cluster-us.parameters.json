@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "clusterName": {
-            "value": "tdswe-us"
+            "value": "tdswe-us2"
         },
         "dnsPrefix": {
-            "value": "tdswe-us"
+            "value": "tdswe-us2"
         },
         "location": {
             "value": "eastus2"

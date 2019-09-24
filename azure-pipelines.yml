@@ -51,7 +51,7 @@ stages:
       inputs:
         azureSubscription: 'Azure Spnsorship'
         action: 'Create Or Update Resource Group'
-        resourceGroupName: 'tdswe-us'
+        resourceGroupName: 'tdswe-us2'
         location: 'EastUS2'
         templateLocation: 'Linked artifact'
         csmFile: '$(System.DefaultWorkingDirectory)/AKS/cluster.json'
