@@ -11,6 +11,7 @@ stages:
       name: Local  
     steps:
     - task: AzureResourceGroupDeployment@2
+      enabled: false
       displayName: Deploy Test
       inputs:
         azureSubscription: 'Azure Spnsorship'
