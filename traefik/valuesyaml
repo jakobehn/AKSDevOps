@@ -1,0 +1,6 @@
+rbac:
+  enabled: false
+
+dashboard:
+  enabled: true
+  domain: traefik.example.com  
