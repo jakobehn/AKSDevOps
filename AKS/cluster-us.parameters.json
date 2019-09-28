@@ -9,7 +9,7 @@
             "value": "tdswe-us"
         },
         "location": {
-            "value": "eastus"
+            "value": "eastus2"
         },
         "osDiskSizeGB": {
             "value": 100
