@@ -235,6 +235,7 @@
                     "enablePodSecurityPolicy": false,
                     "networkProfile": {
                         "networkPlugin": "[parameters('networkPlugin')]",
+                        "networkPolicy":"azure",
                         "loadBalancerSku": "standard",
                         "podCidr": "[parameters('podCidr')]",
                         "serviceCidr": "[parameters('serviceCidr')]",
