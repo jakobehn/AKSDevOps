@@ -46,7 +46,12 @@
             "addressPrefixes": [
               "[parameters('vnetAddressPrefix')]"
             ]
-          }
+          },
+          "subnets": [
+            {
+                "name": "[parameters('subnetName')]"
+            }
+          ]
         },
         "resources": [
           {
@@ -63,19 +68,5 @@
           }
         ]
       }
-    ],
-    "outputs": {
-      "vnetName": {
-        "type": "string",
-        "value": "[parameters('vnetName')]"
-      },
-      "vnetResourceGroupName": {
-        "type": "string",
-        "value": "[resourceGroup().name]"
-      },
-      "subnetName": {
-        "type": "string",
-        "value": "[parameters('subnetName')]"
-      }
-    }
+    ]
   }
