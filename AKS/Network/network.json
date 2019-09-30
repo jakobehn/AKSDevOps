@@ -49,24 +49,13 @@
           },
           "subnets": [
             {
-                "name": "[parameters('subnetName')]"
+                "name": "[parameters('subnetName')]",
+                "properties": {
+                  "addressPrefix": "[parameters('subnetPrefix')]"
+                }                
             }
           ]
-        },
-        "resources": [
-          {
-            "apiVersion": "2018-06-01",
-            "type": "subnets",
-            "location": "[parameters('location')]",
-            "name": "[parameters('subnetName')]",
-            "dependsOn": [
-              "[parameters('vnetName')]"
-            ],
-            "properties": {
-              "addressPrefix": "[parameters('subnetPrefix')]"
-            }
-          }
-        ]
+        }
       }
     ]
   }
