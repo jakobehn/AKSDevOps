@@ -57,7 +57,7 @@
             {
               "name": "vnodes",
               "properties": {
-                "addressPrefix": "10.10.1.0/24"
+                "addressPrefix": "10.240.0.0/16"
               }                
           }            
           ]
