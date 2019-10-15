@@ -57,7 +57,15 @@
             {
               "name": "vnodes",
               "properties": {
-                "addressPrefix": "10.10.1.0/24"
+                "addressPrefix": "10.10.1.0/24",
+                "delegations": [
+                      {
+                          "name": "aciDelegation",
+                          "properties": {
+                              "serviceName": "Microsoft.ContainerInstance/containerGroups"
+                          }
+                      }
+                  ]
               }                
           }            
           ]
