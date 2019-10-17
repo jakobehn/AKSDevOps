@@ -228,15 +228,6 @@
                           "config": {
                             "logAnalyticsWorkspaceResourceID": "[parameters('logAnalyticsWorkspaceResourceId')]"
                           }
-                        },
-                        "aciConnectorLinux": {
-                            "enabled": true,
-                            "config": {
-                                "SubnetName": "vnodes"
-                            }
-                        },
-                        "azurepolicy": {
-                            "enabled": true
                         }
                       },                    
                     "nodeResourceGroup": "[concat('MC_', parameters('clusterName'), '_', parameters('clusterName'), parameters('location'))]",
