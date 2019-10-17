@@ -10,7 +10,7 @@ metadata:
   namespace: qbox-dev
 subjects:
 - kind: ServiceAccount
-  name: azdev-sa-dc403b
+  name: qbox-deployment
   namespace: qbox-dev
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -24,7 +24,7 @@ metadata:
   namespace: kube-system
 subjects:
 - kind: ServiceAccount
-  name: azdev-sa-dc403b
+  name: qbox-deployment
   namespace: qbox-dev
 roleRef:
   apiGroup: rbac.authorization.k8s.io
