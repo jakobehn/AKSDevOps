@@ -10,7 +10,7 @@ metadata:
   namespace: qbox-dev
 subjects:
 - kind: ServiceAccount
-  name: qbox-deployment
+  name: qbox-dev
   namespace: qbox-dev
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -24,9 +24,42 @@ metadata:
   namespace: kube-system
 subjects:
 - kind: ServiceAccount
-  name: qbox-deployment
+  name: qbox-dev
   namespace: qbox-dev
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: deployment-services  
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: qbox-staging
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: deployment-staging
+  namespace: qbox-staging
+subjects:
+- kind: ServiceAccount
+  name: qbox-staging
+  namespace: qbox-staging
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: deployment-services
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: deployment-staging
+  namespace: kube-system
+subjects:
+- kind: ServiceAccount
+  name: qbox-staging
+  namespace: qbox-staging
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: deployment-services    
