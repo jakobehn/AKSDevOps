@@ -184,7 +184,7 @@
         "resources": [
             {
                 "type": "Microsoft.ContainerService/managedClusters",
-                "apiVersion": "2019-06-01",
+                "apiVersion": "2019-08-01",
                 "name": "[parameters('clusterName')]",
                 "location": "[parameters('location')]",
                 "properties": {
