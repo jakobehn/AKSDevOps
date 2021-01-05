@@ -1,0 +1,71 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "name": {
+        "value": "ndc-demo"
+      },
+      "agentPoolProfiles": {
+        "value": [
+          {
+            "name": "nodepool1",
+            "nodeCount": 2,
+            "nodeVmSize": "Standard_D4_v3",
+            "availabilityZones": [
+              "1",
+              "2",
+              "3"
+            ],
+            "osType": "Linux",
+            "enableAutoScaling": false,
+            "mode": "System",
+            "nodeLabels": {
+              "environment": "demo"
+            },
+            "nodeTaints": []
+          }
+        ]
+      },
+      "kubernetesVersion": {
+        "value": "1.19.3"
+      },
+      "workspaceName": {
+        "value": "ndclondon"
+      },
+      "workspaceResourceGroup": {
+        "value": "ndclondon"
+      },
+      "acrName": {
+        "value": "jakob"
+      },
+      "acrResourceGroupName": {
+        "value": "acr"
+      },
+      "vnetName": {
+        "value": "ndclondon"
+      },
+      "vnetSubnetName": {
+        "value": "ndclondon"
+      },
+      "vnetResourceGroupName": {
+        "value": "ndclondon"
+      },
+      "controlPlaneSku": {
+        "value": "Free"
+      },
+      "aksPolicy": {
+        "value": false
+      },
+      "adminGroups": {
+        "value": [
+          "00000000-0000-0000-0000-000000000000"
+        ]
+      },
+      "ipWhitelist": {
+        "value": []
+      },
+      "privateCluster": {
+        "value": false
+      }
+    }
+  }
