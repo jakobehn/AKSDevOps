@@ -137,7 +137,7 @@
       "acrId": "[resourceId(parameters('acrResourceGroupName'), 'Microsoft.ContainerRegistry/registries', parameters('acrName'))]"
     },
     "outputs": {
-      "resourceId": "[resourceId('Microsoft.ContainerService/managedClusters/' ,parameters('name'))]"
+      "resourceId": "[resourceId('Microsoft.ContainerService/managedClusters/' ,parameters('clusterName'))]"
     }
   },
   "resources": [
@@ -222,21 +222,21 @@
     {
       "apiVersion": "[variables('apiVersion').rbac]",
       "type": "Microsoft.ContainerService/managedClusters/providers/roleAssignments",
-      "name": "[concat(parameters('name'), '/Microsoft.Authorization/', guid(resourceGroup().id, parameters('name'), 'Monitoring Metrics Publisher'))]",
+      "name": "[concat(parameters('clusterName'), '/Microsoft.Authorization/', guid(resourceGroup().id, parameters('clusterName'), 'Monitoring Metrics Publisher'))]",
       "properties": {
         // Monitoring Metrics Publisher = 3913510d-42f4-4e42-8a64-420c390055eb
         "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', '3913510d-42f4-4e42-8a64-420c390055eb')]",
-        "principalId": "[reference(concat('Microsoft.ContainerService/managedClusters/', parameters('name')), variables('apiVersion').aks).addonProfiles.omsagent.identity.objectId]",
+        "principalId": "[reference(concat('Microsoft.ContainerService/managedClusters/', parameters('clusterName')), variables('apiVersion').aks).addonProfiles.omsagent.identity.objectId]",
         "scope": "[variables('outputs').resourceId]"
       }
     },
     {
       "apiVersion": "[variables('apiVersion').deployments]",
       "type": "Microsoft.Resources/deployments",
-      "name": "[concat(parameters('name'), '-vnet-subnet-rbac')]",
+      "name": "[concat(parameters('clusterName'), '-vnet-subnet-rbac')]",
       "resourceGroup": "[parameters('vnetResourceGroupName')]",
       "dependsOn": [
-        "[concat('Microsoft.ContainerService/managedClusters/', parameters('name'))]"
+        "[concat('Microsoft.ContainerService/managedClusters/', parameters('clusterName'))]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -249,11 +249,11 @@
             {
               "apiVersion": "[variables('apiVersion').rbac]",
               "type": "Microsoft.Network/virtualNetworks/subnets/providers/roleAssignments",
-              "name": "[concat(parameters('vnetName'), '/', parameters('vnetSubnetName'), '/Microsoft.Authorization/', guid(resourceGroup().id, parameters('name'), 'Network Contributor'))]",
+              "name": "[concat(parameters('vnetName'), '/', parameters('vnetSubnetName'), '/Microsoft.Authorization/', guid(resourceGroup().id, parameters('clusterName'), 'Network Contributor'))]",
               "properties": {
                 // Network Contributor = 4d97b98b-1d4f-4787-a291-c67834d212e7
                 "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
-                "principalId": "[reference(concat('Microsoft.ContainerService/managedClusters/', parameters('name')), variables('apiVersion').aks, 'Full').identity.principalId]",
+                "principalId": "[reference(concat('Microsoft.ContainerService/managedClusters/', parameters('clusterName')), variables('apiVersion').aks, 'Full').identity.principalId]",
                 "scope": "[variables('agentPoolProfiles').vnetSubnetId]"
               }
             }
@@ -265,10 +265,10 @@
     {
       "apiVersion": "[variables('apiVersion').deployments]",
       "type": "Microsoft.Resources/deployments",
-      "name": "[concat(parameters('name'), '-acr-rbac')]",
+      "name": "[concat(parameters('clusterName'), '-acr-rbac')]",
       "resourceGroup": "[parameters('acrResourceGroupName')]",
       "dependsOn": [
-        "[concat('Microsoft.ContainerService/managedClusters/', parameters('name'))]"
+        "[concat('Microsoft.ContainerService/managedClusters/', parameters('clusterName'))]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -281,11 +281,11 @@
             {
               "apiVersion": "[variables('apiVersion').rbac]",
               "type": "Microsoft.ContainerRegistry/registries/providers/roleAssignments",
-              "name": "[concat(parameters('acrName'), '/Microsoft.Authorization/', guid(resourceGroup().id, parameters('name'), 'AcrPull'))]",
+              "name": "[concat(parameters('acrName'), '/Microsoft.Authorization/', guid(resourceGroup().id, parameters('clusterName'), 'AcrPull'))]",
               "properties": {
                 // AcrPull = 7f951dda-4ed3-4680-a7ca-43fe172d538d
                 "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
-                "principalId": "[reference(concat('Microsoft.ContainerService/managedClusters/', parameters('name')), variables('apiVersion').aks).identityProfile.kubeletidentity.objectId]",
+                "principalId": "[reference(concat('Microsoft.ContainerService/managedClusters/', parameters('clusterName')), variables('apiVersion').aks).identityProfile.kubeletidentity.objectId]",
                 "scope": "[variables('cluster').acrId]"
               }
             }
@@ -298,7 +298,7 @@
   "outputs": {
     "name": {
       "type": "string",
-      "value": "[parameters('name')]"
+      "value": "[parameters('clusterName')]"
     },
     "resourceId": {
       "type": "string",
