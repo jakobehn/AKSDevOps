@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "clusterName": {
-        "value": "ndc-demo"
+        "value": "ndc-test"
       },
       "agentPoolProfiles": {
         "value": [
@@ -18,6 +18,8 @@
             ],
             "osType": "Linux",
             "enableAutoScaling": true,
+            "maxCount": 4,
+            "minCount": 2,
             "mode": "System",
             "nodeLabels": {
               "environment": "demo"
@@ -42,13 +44,13 @@
         "value": "acr"
       },
       "vnetName": {
-        "value": "ndclondon"
+        "value": "ndc-test"
       },
       "vnetSubnetName": {
         "value": "ndclondon"
       },
       "vnetResourceGroupName": {
-        "value": "ndclondon"
+        "value": "ndc-test"
       },
       "controlPlaneSku": {
         "value": "Free"
