@@ -1,0 +1,7 @@
+groups: 
+  clusterReaders: 123
+  clusterAdmins: 456
+
+namespaces: 
+  development: qbox-dev
+  test: qbox-test
