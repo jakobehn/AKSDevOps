@@ -12,6 +12,10 @@ variables:
   workspaceName: ndclondon
   workspaceResourceGroup: ndclondon
 
+pool:
+  name: AzurePipelines
+  vmImage: 'windows-2019'
+
 stages:
 
 - stage: DevTestEU
