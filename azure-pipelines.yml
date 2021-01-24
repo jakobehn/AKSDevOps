@@ -9,6 +9,7 @@ variables:
   subnetPrefix: 10.230.0.0/16
   vnetAddressPrefix: 10.0.0.0/8
   vnodesSubnetName: vnodes
+  vnodesSubnetPrefix: 10.231.0.0/16
   workspaceName: ndclondon
   workspaceResourceGroup: ndclondon
 
