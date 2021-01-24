@@ -71,6 +71,10 @@ jobs:
           - task: Kubernetes@1
             displayName: Namespaces
             inputs:
+              connectionType: 'Azure Resource Manager'
+              azureSubscriptionEndpoint: ${{ variables.subscriptionName }}
+              azureResourceGroup: '$(resourceGroup)'
+              kubernetesCluster: '$(clusterName)'
               command: apply
               arguments: '-f $(namespacesFile)'
               workingDirectory: '$(Build.SourcesDirectory)'
