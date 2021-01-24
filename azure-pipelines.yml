@@ -73,7 +73,7 @@ stages:
         subscriptionId: 'b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5'
         resourceGroupName: '$(resourceGroup)'
         location: '$(location)'
-        csmFile: '$(System.DefaultWorkingDirectory)/_QBox.Environment/AKS/Network/network.json'
+        csmFile: '$(Pipeline.Workspace)/AKS/Network/network.json'
         overrideParameters: '-vnetName $(vnetName) -vnetAddressPrefix $(vnetAddressPrefix) -subnetName $(subnetName) -subnetPrefix $(subnetPrefix) -vnodesSubnetPrefix $(vnodesSubnetPrefix) -vnodesSubnetName $(vnodesSubnetName) -location $(location)'    
 
     - task: AzureResourceGroupDeployment@2
@@ -82,8 +82,8 @@ stages:
         azureSubscription: 'Azure Sponsor'
         resourceGroupName: '$(resourceGroup)'
         location: '$(location)'
-        csmFile: '$(System.DefaultWorkingDirectory)/_QBox.Environment/AKS/aks-cluster.json'
-        csmParametersFile: '$(System.DefaultWorkingDirectory)/_QBox.Environment/AKS/aks-cluster.parameters.json'
+        csmFile: '$(Pipeline.Workspace)/AKS/aks-cluster.json'
+        csmParametersFile: '$(Pipeline.Workspace)/AKS/aks-cluster.parameters.json'
         overrideParameters: '-clusterName $(clusterName) -kubernetesVersion $(kubernetesVersion) -workspaceName $(workspaceName) -workspaceResourceGroup $(workspaceResourceGroup) -acrName $(acrName) -acrResourceGroupName $(acrResourceGroupName) -vnetName $(vnetName) -vnetSubnetName $(subnetName) -vnetResourceGroupName $(vnetResourceGroupName) -controlPlaneSku $(controlPlaneSku) -aksPolicy $(aksPolicy)'    
 
     - task: HelmInstaller@0
@@ -101,7 +101,7 @@ stages:
         useClusterAdmin: true
         command: apply
         arguments: '-f $(namespacesFile)'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/_QBox.Environment/'
+        workingDirectory: '$(Pipeline.Workspace)'
 
     - task: HelmDeploy@0
       displayName: 'Cluster permissions'
@@ -112,7 +112,7 @@ stages:
         useClusterAdmin: true
         command: upgrade
         chartType: FilePath
-        chartPath: '$(System.DefaultWorkingDirectory)/_QBox.Environment/Permissions'
+        chartPath: '$(Pipeline.Workspace)/Permissions'
         releaseName: qboxpermissions
         overrideValues: 'groups.clusterReaders=$(clusterReaderGroupObjectId),groups.clusterAdmins=$(clusterAdminGroupObjectId)'
         waitForExecution: false
@@ -149,6 +149,6 @@ stages:
         chartName: traefik/traefik
         chartVersion: 9.12.3
         releaseName: traefik
-        valueFile: '$(System.DefaultWorkingDirectory)/_QBox.Environment/traefik/values.yaml'
+        valueFile: '$(Pipeline.Workspace)/traefik/values.yaml'
         waitForExecution: false
         arguments: '--debug'
