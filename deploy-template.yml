@@ -75,9 +75,8 @@ jobs:
               azureSubscriptionEndpoint: ${{ variables.subscriptionName }}
               azureResourceGroup: '$(resourceGroup)'
               kubernetesCluster: '$(clusterName)'
-              command: create
-              arguments: 'namespace $(namespace) --dry-run=client -o yaml | kubectl apply -f -'
-              workingDirectory: '$(Build.SourcesDirectory)'
+              command: apply
+              arguments: '-f $(Build.SourcesDirectory)/AKS/namespace.yml'
 
           - task: HelmDeploy@0
             displayName: 'Cluster permissions'
