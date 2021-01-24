@@ -28,7 +28,6 @@ stages:
     resourceGroup: ndc-test
     vnetName: ndc-test
     vnetResourceGroupName: ndc-test
-
   jobs:      
   - template: deploy-template.yml
     parameters:
@@ -36,6 +35,7 @@ stages:
 
 - stage: ProdEU
   displayName: ProdEU
+  dependsOn: DevTestEU
   variables:
     clusterName: ndc-prodeu
     location: westeurope
@@ -43,7 +43,6 @@ stages:
     resourceGroup: ndc-prodeu
     vnetName: ndc-prodeu
     vnetResourceGroupName: ndc-prodeu
-
   jobs:      
   - template: deploy-template.yml
     parameters:
@@ -51,6 +50,7 @@ stages:
 
 - stage: ProdUS
   displayName: ProdUS
+  dependsOn: DevTestEU
   variables:
     clusterName: ndc-produs
     location: eastus2
@@ -58,8 +58,7 @@ stages:
     resourceGroup: ndc-produs
     vnetName: ndc-produs
     vnetResourceGroupName: ndc-produs
-
   jobs:      
   - template: deploy-template.yml
     parameters:
-        environment: ProdUS           
+        environment: ProdUS
