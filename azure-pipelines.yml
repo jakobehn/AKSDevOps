@@ -31,3 +31,35 @@ stages:
 
   jobs:      
   - template: deploy-template.yml
+    parameters:
+        environment: Development  
+
+- stage: ProdEU
+  displayName: ProdEU
+  variables:
+    clusterName: ndc-prodeu
+    location: westeurope
+    namespacesFile: ./AKS/namespaces-prod.yaml
+    resourceGroup: ndc-prodeu
+    vnetName: ndc-prodeu
+    vnetResourceGroupName: ndc-prodeu
+
+  jobs:      
+  - template: deploy-template.yml
+    parameters:
+        environment: ProdEU
+
+- stage: ProdUS
+  displayName: ProdUS
+  variables:
+    clusterName: ndc-produs
+    location: eastus2
+    namespacesFile: ./AKS/namespaces-prod.yaml
+    resourceGroup: ndc-produs
+    vnetName: ndc-produs
+    vnetResourceGroupName: ndc-produs
+
+  jobs:      
+  - template: deploy-template.yml
+    parameters:
+        environment: ProdUS           

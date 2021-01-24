@@ -1,118 +1,129 @@
-jobs:      
-  - job: Deploy
+parameters:
+- name: environment
+  type: string
+  
+jobs:    
+  - deployment: Deploy
     displayName: Deploy
+     
+    environment: '${{ parameters.environment }}'
 
-    steps:
-    - task: AzureCLI@2
-      displayName: 'Azure AD Groups'
-      inputs:
-        azureSubscription: 'Azure Sponsorship'
-        scriptType: ps
-        scriptLocation: inlineScript
-        inlineScript: |        
-          $readerGroups = az ad group list --display-name "ClusterReader" | ConvertFrom-Json
-          $adminGroups = az ad group list --display-name "ClusterReader" | ConvertFrom-Json
+    strategy:
+      runOnce:
+        deploy:
 
-          if( $readerGroups.length -eq 0 ) {
-              $clusterReaderGroup = az ad group create --display-name ClusterReaders --mail-nickname ClusterReaders --force | ConvertFrom-Json
-          } else {
-              $clusterReaderGroup = $readerGroups[0]
-          }
-                    
-          if( $adminGroups.length -eq 0 ) {
-              $clusterAdminGroup = az ad group create --display-name ClusterAdmins --mail-nickname ClusterAdmins --force | ConvertFrom-Json
-          } else {
-              $clusterAdminGroup = $adminGroups[0]
-          }
-          
-          Write-Host "##vso[task.setvariable variable=clusterReaderGroupObjectId;]$($clusterReaderGroup.objectId)"
-          Write-Host "##vso[task.setvariable variable=clusterAdminGroupObjectId;]$($clusterAdminGroup.objectId)"
-        failOnStandardError: true
+          steps:
 
-    - task: AzureResourceManagerTemplateDeployment@3
-      displayName: 'Azure CNI Network'
-      inputs:
-        azureResourceManagerConnection: 'Azure Sponsor'
-        subscriptionId: 'b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5'
-        resourceGroupName: '$(resourceGroup)'
-        location: '$(location)'
-        csmFile: '$(Build.SourcesDirectory)/AKS/Network/network.json'
-        overrideParameters: '-vnetName $(vnetName) -vnetAddressPrefix $(vnetAddressPrefix) -subnetName $(subnetName) -subnetPrefix $(subnetPrefix) -vnodesSubnetPrefix $(vnodesSubnetPrefix) -vnodesSubnetName $(vnodesSubnetName) -location $(location)'    
+          - task: AzureCLI@2
+            displayName: 'Azure AD Groups'
+            inputs:
+              azureSubscription: 'Azure Sponsorship'
+              scriptType: ps
+              scriptLocation: inlineScript
+              inlineScript: |        
+                $readerGroups = az ad group list --display-name "ClusterReader" | ConvertFrom-Json
+                $adminGroups = az ad group list --display-name "ClusterReader" | ConvertFrom-Json
 
-    - task: AzureResourceGroupDeployment@2
-      displayName: 'AKS Cluster $(kubernetesVersion)'
-      enabled: false
-      inputs:
-        azureSubscription: 'Azure Sponsor'
-        resourceGroupName: '$(resourceGroup)'
-        location: '$(location)'
-        csmFile: '$(Build.SourcesDirectory)/AKS/aks-cluster.json'
-        csmParametersFile: '$(Build.SourcesDirectory)/AKS/aks-cluster.parameters.json'
-        overrideParameters: '-clusterName $(clusterName) -kubernetesVersion $(kubernetesVersion) -workspaceName $(workspaceName) -workspaceResourceGroup $(workspaceResourceGroup) -acrName $(acrName) -acrResourceGroupName $(acrResourceGroupName) -vnetName $(vnetName) -vnetSubnetName $(subnetName) -vnetResourceGroupName $(vnetResourceGroupName) -controlPlaneSku $(controlPlaneSku) -aksPolicy $(aksPolicy)'    
+                if( $readerGroups.length -eq 0 ) {
+                    $clusterReaderGroup = az ad group create --display-name ClusterReaders --mail-nickname ClusterReaders --force | ConvertFrom-Json
+                } else {
+                    $clusterReaderGroup = $readerGroups[0]
+                }
+                          
+                if( $adminGroups.length -eq 0 ) {
+                    $clusterAdminGroup = az ad group create --display-name ClusterAdmins --mail-nickname ClusterAdmins --force | ConvertFrom-Json
+                } else {
+                    $clusterAdminGroup = $adminGroups[0]
+                }
+                
+                Write-Host "##vso[task.setvariable variable=clusterReaderGroupObjectId;]$($clusterReaderGroup.objectId)"
+                Write-Host "##vso[task.setvariable variable=clusterAdminGroupObjectId;]$($clusterAdminGroup.objectId)"
+              failOnStandardError: true
 
-    - task: HelmInstaller@0
-      displayName: 'Install Helm'
-      inputs:
-        helmVersion: 3.4.2
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'Azure CNI Network'
+            inputs:
+              azureResourceManagerConnection: 'Azure Sponsor'
+              subscriptionId: 'b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5'
+              resourceGroupName: '$(resourceGroup)'
+              location: '$(location)'
+              csmFile: '$(Build.SourcesDirectory)/AKS/Network/network.json'
+              overrideParameters: '-vnetName $(vnetName) -vnetAddressPrefix $(vnetAddressPrefix) -subnetName $(subnetName) -subnetPrefix $(subnetPrefix) -vnodesSubnetPrefix $(vnodesSubnetPrefix) -vnodesSubnetName $(vnodesSubnetName) -location $(location)'    
 
-    - task: Kubernetes@1
-      displayName: Namespaces
-      inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscriptionEndpoint: 'Azure Sponsor'
-        azureResourceGroup: '$(resourceGroup)'
-        kubernetesCluster: '$(clusterName)'
-        useClusterAdmin: true
-        command: apply
-        arguments: '-f $(namespacesFile)'
-        workingDirectory: '$(Build.SourcesDirectory)'
+          - task: AzureResourceGroupDeployment@2
+            displayName: 'AKS Cluster $(kubernetesVersion)'
+            enabled: false
+            inputs:
+              azureSubscription: 'Azure Sponsor'
+              resourceGroupName: '$(resourceGroup)'
+              location: '$(location)'
+              csmFile: '$(Build.SourcesDirectory)/AKS/aks-cluster.json'
+              csmParametersFile: '$(Build.SourcesDirectory)/AKS/aks-cluster.parameters.json'
+              overrideParameters: '-clusterName $(clusterName) -kubernetesVersion $(kubernetesVersion) -workspaceName $(workspaceName) -workspaceResourceGroup $(workspaceResourceGroup) -acrName $(acrName) -acrResourceGroupName $(acrResourceGroupName) -vnetName $(vnetName) -vnetSubnetName $(subnetName) -vnetResourceGroupName $(vnetResourceGroupName) -controlPlaneSku $(controlPlaneSku) -aksPolicy $(aksPolicy)'    
 
-    - task: HelmDeploy@0
-      displayName: 'Cluster permissions'
-      inputs:
-        azureSubscription: 'Azure Sponsor'
-        azureResourceGroup: '$(resourceGroup)'
-        kubernetesCluster: '$(clusterName)'
-        useClusterAdmin: true
-        command: upgrade
-        chartType: FilePath
-        chartPath: '$(Build.SourcesDirectory)/Permissions'
-        releaseName: qboxpermissions
-        overrideValues: 'groups.clusterReaders=$(clusterReaderGroupObjectId),groups.clusterAdmins=$(clusterAdminGroupObjectId)'
-        waitForExecution: false
-        arguments: '--atomic'
+          - task: HelmInstaller@0
+            displayName: 'Install Helm'
+            inputs:
+              helmVersion: 3.4.2
 
-    - task: HelmDeploy@0
-      displayName: 'helm repo add'
-      inputs:
-        azureSubscription: 'Azure Sponsor'
-        azureResourceGroup: '$(resourceGroup)'
-        kubernetesCluster: '$(clusterName)'
-        useClusterAdmin: true
-        command: repo
-        arguments: 'add traefik https://helm.traefik.io/traefik'
+          - task: Kubernetes@1
+            displayName: Namespaces
+            inputs:
+              connectionType: 'Azure Resource Manager'
+              azureSubscriptionEndpoint: 'Azure Sponsor'
+              azureResourceGroup: '$(resourceGroup)'
+              kubernetesCluster: '$(clusterName)'
+              useClusterAdmin: true
+              command: apply
+              arguments: '-f $(namespacesFile)'
+              workingDirectory: '$(Build.SourcesDirectory)'
 
-    - task: HelmDeploy@0
-      displayName: 'helm repo update'
-      inputs:
-        azureSubscription: 'Azure Sponsor'
-        azureResourceGroup: '$(resourceGroup)'
-        kubernetesCluster: '$(clusterName)'
-        useClusterAdmin: true
-        command: repo
-        arguments: update
+          - task: HelmDeploy@0
+            displayName: 'Cluster permissions'
+            inputs:
+              azureSubscription: 'Azure Sponsor'
+              azureResourceGroup: '$(resourceGroup)'
+              kubernetesCluster: '$(clusterName)'
+              useClusterAdmin: true
+              command: upgrade
+              chartType: FilePath
+              chartPath: '$(Build.SourcesDirectory)/Permissions'
+              releaseName: qboxpermissions
+              overrideValues: 'groups.clusterReaders=$(clusterReaderGroupObjectId),groups.clusterAdmins=$(clusterAdminGroupObjectId)'
+              waitForExecution: false
+              arguments: '--atomic'
 
-    - task: HelmDeploy@0
-      displayName: 'Traefik ingress controller'
-      inputs:
-        azureSubscription: 'Azure Sponsor'
-        azureResourceGroup: '$(resourceGroup)'
-        kubernetesCluster: '$(clusterName)'
-        useClusterAdmin: true
-        command: upgrade
-        chartName: traefik/traefik
-        chartVersion: 9.12.3
-        releaseName: traefik
-        valueFile: '$(Build.SourcesDirectory)/traefik/values.yaml'
-        waitForExecution: false
-        arguments: '--debug'
+          - task: HelmDeploy@0
+            displayName: 'helm repo add'
+            inputs:
+              azureSubscription: 'Azure Sponsor'
+              azureResourceGroup: '$(resourceGroup)'
+              kubernetesCluster: '$(clusterName)'
+              useClusterAdmin: true
+              command: repo
+              arguments: 'add traefik https://helm.traefik.io/traefik'
+
+          - task: HelmDeploy@0
+            displayName: 'helm repo update'
+            inputs:
+              azureSubscription: 'Azure Sponsor'
+              azureResourceGroup: '$(resourceGroup)'
+              kubernetesCluster: '$(clusterName)'
+              useClusterAdmin: true
+              command: repo
+              arguments: update
+
+          - task: HelmDeploy@0
+            displayName: 'Traefik ingress controller'
+            inputs:
+              azureSubscription: 'Azure Sponsor'
+              azureResourceGroup: '$(resourceGroup)'
+              kubernetesCluster: '$(clusterName)'
+              useClusterAdmin: true
+              command: upgrade
+              chartName: traefik/traefik
+              chartVersion: 9.12.3
+              releaseName: traefik
+              valueFile: '$(Build.SourcesDirectory)/traefik/values.yaml'
+              waitForExecution: false
+              arguments: '--debug'
