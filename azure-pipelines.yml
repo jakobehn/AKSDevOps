@@ -6,6 +6,7 @@ variables:
   aksPolicy: true
   controlPlaneSku: Free
   kubernetesVersion: 1.19.3
+  namespace: qbox  
   subnetName: cluster
   subnetPrefix: 10.230.0.0/16
   vnetAddressPrefix: 10.0.0.0/8
@@ -19,12 +20,11 @@ pool:
 
 stages:
 
-- stage: DevTestEU
-  displayName: DevTestEU
+- stage: DevTest
+  displayName: DevTest
   variables:
     clusterName: ndc-test
     location: westeurope
-    namespacesFile: ./AKS/namespaces-devtest.yaml
     resourceGroup: ndc-test
     vnetName: ndc-test
     vnetResourceGroupName: ndc-test
@@ -39,7 +39,6 @@ stages:
   variables:
     clusterName: ndc-prodeu
     location: westeurope
-    namespacesFile: ./AKS/namespaces-prod.yaml
     resourceGroup: ndc-prodeu
     vnetName: ndc-prodeu
     vnetResourceGroupName: ndc-prodeu
@@ -54,7 +53,6 @@ stages:
   variables:
     clusterName: ndc-produs
     location: eastus2
-    namespacesFile: ./AKS/namespaces-prod.yaml
     resourceGroup: ndc-produs
     vnetName: ndc-produs
     vnetResourceGroupName: ndc-produs
