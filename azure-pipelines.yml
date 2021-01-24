@@ -63,11 +63,16 @@ stages:
           
           Write-Host $clusterReaderGroup
           Write-Host $clusterAdminGroup
+          Write-Host $clusterReaderGroup.objectId
+          Write-Host $clusterAdminGroup.objectId
+          Write-Host $(clusterReaderGroup.objectId)
+          Write-Host $(clusterAdminGroup.objectId)
 
-          Write-Host "vso[task.setvariable variable=clusterReaderGroupObjectId;]$clusterReaderGroup.objectId"
-          Write-Host "vso[task.setvariable variable=clusterAdminGroupObjectId;]$clusterAdminGroup.objectId"
-          Write-Host "##vso[task.setvariable variable=clusterReaderGroupObjectId;]$clusterReaderGroup.objectId"
-          Write-Host "##vso[task.setvariable variable=clusterAdminGroupObjectId;]$clusterAdminGroup.objectId"
+
+          Write-Host "vso[task.setvariable variable=clusterReaderGroupObjectId;]$(clusterReaderGroup).objectId"
+          Write-Host "vso[task.setvariable variable=clusterAdminGroupObjectId;]$(clusterAdminGroup).objectId"
+          Write-Host "##vso[task.setvariable variable=clusterReaderGroupObjectId;]$(clusterReaderGroup).objectId"
+          Write-Host "##vso[task.setvariable variable=clusterAdminGroupObjectId;]$(clusterAdminGroup).objectId"
         failOnStandardError: true
 
     - task: AzureResourceManagerTemplateDeployment@3
