@@ -75,6 +75,7 @@ jobs:
               azureSubscriptionEndpoint: ${{ variables.subscriptionName }}
               azureResourceGroup: '$(resourceGroup)'
               kubernetesCluster: '$(clusterName)'
+              useClusterAdmin: true
               command: apply
               arguments: '-f $(Build.SourcesDirectory)/AKS/namespace.yml'
 
