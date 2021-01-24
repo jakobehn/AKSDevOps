@@ -63,7 +63,9 @@ stages:
           
           Write-Host $clusterReaderGroup
           Write-Host $clusterAdminGroup
-          
+
+          Write-Host "vso[task.setvariable variable=clusterReaderGroupObjectId;]$clusterReaderGroup.objectId"
+          Write-Host "vso[task.setvariable variable=clusterAdminGroupObjectId;]$clusterAdminGroup.objectId"
           Write-Host "##vso[task.setvariable variable=clusterReaderGroupObjectId;]$clusterReaderGroup.objectId"
           Write-Host "##vso[task.setvariable variable=clusterAdminGroupObjectId;]$clusterAdminGroup.objectId"
         failOnStandardError: true
