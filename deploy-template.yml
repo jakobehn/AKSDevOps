@@ -19,7 +19,7 @@ jobs:
           - task: AzureCLI@2
             displayName: 'Azure AD Groups'
             inputs:
-              azureSubscription: $(subscriptionName)
+              azureSubscription: ${{ variables.subscriptionName }}
               scriptType: ps
               scriptLocation: inlineScript
               inlineScript: |        
