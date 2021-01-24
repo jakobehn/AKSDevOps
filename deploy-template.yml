@@ -7,7 +7,7 @@ jobs:
     displayName: Deploy     
     environment: 
       name: ${{ parameters.environment }}
-      resource: qbox
+      resourceName: qbox
     variables: 
       subscriptionName: 'Azure Sponsorship'
 
