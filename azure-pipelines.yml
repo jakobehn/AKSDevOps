@@ -87,6 +87,7 @@ stages:
 
     - task: AzureResourceGroupDeployment@2
       displayName: 'AKS Cluster $(kubernetesVersion)'
+      enabled: false
       inputs:
         azureSubscription: 'Azure Sponsor'
         resourceGroupName: '$(resourceGroup)'
