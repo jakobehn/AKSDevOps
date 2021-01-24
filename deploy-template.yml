@@ -45,7 +45,7 @@ jobs:
           - task: AzureResourceManagerTemplateDeployment@3
             displayName: 'Azure CNI Network'
             inputs:
-              azureResourceManagerConnection: 'Azure Sponsor'
+              azureResourceManagerConnection: ${{ variables.subscriptionName }}
               subscriptionId: 'b7b2c6f7-b71e-4cd2-9e7c-409a44fe22f5'
               resourceGroupName: '$(resourceGroup)'
               location: '$(location)'
@@ -56,7 +56,7 @@ jobs:
             displayName: 'AKS Cluster $(kubernetesVersion)'
             enabled: false
             inputs:
-              azureSubscription: 'Azure Sponsor'
+              azureSubscription: ${{ variables.subscriptionName }}
               resourceGroupName: '$(resourceGroup)'
               location: '$(location)'
               csmFile: '$(Build.SourcesDirectory)/AKS/aks-cluster.json'
@@ -71,11 +71,6 @@ jobs:
           - task: Kubernetes@1
             displayName: Namespaces
             inputs:
-              connectionType: 'Azure Resource Manager'
-              azureSubscriptionEndpoint: 'Azure Sponsor'
-              azureResourceGroup: '$(resourceGroup)'
-              kubernetesCluster: '$(clusterName)'
-              useClusterAdmin: true
               command: apply
               arguments: '-f $(namespacesFile)'
               workingDirectory: '$(Build.SourcesDirectory)'
@@ -83,10 +78,6 @@ jobs:
           - task: HelmDeploy@0
             displayName: 'Cluster permissions'
             inputs:
-              azureSubscription: 'Azure Sponsor'
-              azureResourceGroup: '$(resourceGroup)'
-              kubernetesCluster: '$(clusterName)'
-              useClusterAdmin: true
               command: upgrade
               chartType: FilePath
               chartPath: '$(Build.SourcesDirectory)/Permissions'
@@ -98,30 +89,18 @@ jobs:
           - task: HelmDeploy@0
             displayName: 'helm repo add'
             inputs:
-              azureSubscription: 'Azure Sponsor'
-              azureResourceGroup: '$(resourceGroup)'
-              kubernetesCluster: '$(clusterName)'
-              useClusterAdmin: true
               command: repo
               arguments: 'add traefik https://helm.traefik.io/traefik'
 
           - task: HelmDeploy@0
             displayName: 'helm repo update'
             inputs:
-              azureSubscription: 'Azure Sponsor'
-              azureResourceGroup: '$(resourceGroup)'
-              kubernetesCluster: '$(clusterName)'
-              useClusterAdmin: true
               command: repo
               arguments: update
 
           - task: HelmDeploy@0
             displayName: 'Traefik ingress controller'
             inputs:
-              azureSubscription: 'Azure Sponsor'
-              azureResourceGroup: '$(resourceGroup)'
-              kubernetesCluster: '$(clusterName)'
-              useClusterAdmin: true
               command: upgrade
               chartName: traefik/traefik
               chartVersion: 9.12.3
