@@ -80,6 +80,9 @@ jobs:
           - task: HelmDeploy@0
             displayName: 'Cluster permissions'
             inputs:           
+              azureSubscription: ${{ variables.subscriptionName }}
+              azureResourceGroup: '$(resourceGroup)'
+              kubernetesCluster: '$(clusterName)'            
               command: upgrade
               chartType: FilePath
               chartPath: '$(Build.SourcesDirectory)/Permissions'
