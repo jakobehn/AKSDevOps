@@ -31,7 +31,7 @@ stages:
   jobs:      
   - template: deploy-template.yml
     parameters:
-        environment: Development  
+        environment: DevTest  
 
 - stage: ProdEU
   displayName: ProdEU
