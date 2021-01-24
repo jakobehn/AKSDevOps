@@ -106,6 +106,9 @@ jobs:
           - task: HelmDeploy@0
             displayName: 'Traefik ingress controller'
             inputs:
+              azureSubscription: ${{ variables.subscriptionName }}
+              azureResourceGroup: '$(resourceGroup)'
+              kubernetesCluster: '$(clusterName)'                        
               command: upgrade
               chartName: traefik/traefik
               chartVersion: 9.12.3
