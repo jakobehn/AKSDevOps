@@ -85,7 +85,7 @@ jobs:
               chartPath: '$(Build.SourcesDirectory)/Permissions'
               releaseName: qboxpermissions
               overrideValues: 'groups.clusterReaders=$(clusterReaderGroupObjectId),groups.clusterAdmins=$(clusterAdminGroupObjectId)'
-              waitForExecution: false
+              useClusterAdmin: true
               arguments: '--atomic'
 
           - task: HelmDeploy@0
@@ -108,5 +108,5 @@ jobs:
               chartVersion: 9.12.3
               releaseName: traefik
               valueFile: '$(Build.SourcesDirectory)/traefik/values.yaml'
-              waitForExecution: false
-              arguments: '--debug'
+              arguments: '--atomic'
+              useClusterAdmin: true
