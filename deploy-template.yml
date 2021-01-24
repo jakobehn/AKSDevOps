@@ -26,7 +26,7 @@ jobs:
               scriptLocation: inlineScript
               inlineScript: |        
                 $readerGroups = az ad group list --display-name "ClusterReader" | ConvertFrom-Json
-                $adminGroups = az ad group list --display-name "ClusterReader" | ConvertFrom-Json
+                $adminGroups = az ad group list --display-name "ClusterAdmins" | ConvertFrom-Json
 
                 if( $readerGroups.length -eq 0 ) {
                     $clusterReaderGroup = az ad group create --display-name ClusterReaders --mail-nickname ClusterReaders --force | ConvertFrom-Json
