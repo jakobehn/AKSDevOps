@@ -71,17 +71,13 @@ jobs:
           - task: Kubernetes@1
             displayName: Namespaces
             inputs:
-              connectionType: 'Azure Resource Manager'
-              azureSubscriptionEndpoint: ${{ variables.subscriptionName }}
-              azureResourceGroup: '$(resourceGroup)'
-              kubernetesCluster: '$(clusterName)'
               useClusterAdmin: true
               command: apply
               arguments: '-f $(Build.SourcesDirectory)/AKS/namespace.yml'
 
           - task: HelmDeploy@0
             displayName: 'Cluster permissions'
-            inputs:
+            inputs:           
               command: upgrade
               chartType: FilePath
               chartPath: '$(Build.SourcesDirectory)/Permissions'
