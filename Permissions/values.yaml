@@ -1,3 +1,4 @@
 groups: 
   clusterReaders: 123
   clusterAdmins: 456
+namespace: xxx
