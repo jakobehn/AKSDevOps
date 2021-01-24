@@ -4,9 +4,10 @@ parameters:
   
 jobs:    
   - deployment: Deploy
-    displayName: Deploy
-     
+    displayName: Deploy     
     environment: '${{ parameters.environment }}'
+    variables: 
+      subscriptionName: 'Azure Sponsorship'
 
     strategy:
       runOnce:
@@ -18,7 +19,7 @@ jobs:
           - task: AzureCLI@2
             displayName: 'Azure AD Groups'
             inputs:
-              azureSubscription: 'Azure Sponsorship'
+              azureSubscription: $(subscriptionName)
               scriptType: ps
               scriptLocation: inlineScript
               inlineScript: |        
