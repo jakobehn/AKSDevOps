@@ -56,7 +56,6 @@ jobs:
 
           - task: AzureResourceGroupDeployment@2
             displayName: 'AKS Cluster $(kubernetesVersion)'
-            enabled: false
             inputs:
               azureSubscription: ${{ variables.subscriptionName }}
               resourceGroupName: '$(resourceGroup)'
