@@ -2,6 +2,7 @@ trigger: none
 
 variables:
   acrName: jakob
+  acrResourceGroupName: acr
   aksPolicy: true
   controlPlaneSku: Free
   kubernetesVersion: 1.19.3
